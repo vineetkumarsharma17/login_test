@@ -95,6 +95,34 @@ class LogInView extends GetView<MainController> {
                           ])),
                     ],
                   ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  GestureDetector(
+                    behavior: HitTestBehavior.opaque,
+                    onTap: () {
+                      controller.signInWithGoogle();
+                    },
+                    child: Container(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                      decoration: BoxDecoration(
+                          border: Border.all(color: AppColors.lightGreyText),
+                          borderRadius: BorderRadius.circular(10)),
+                      child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Image.network(
+                              "https://www.freepnglogos.com/uploads/google-logo-png/google-logo-png-google-icon-logo-png-transparent-svg-vector-bie-supply-14.png",
+                              width: 30,
+                            ),
+                            SizedBox(
+                              width: 20,
+                            ),
+                            Text("Log in with Google")
+                          ]),
+                    ),
+                  )
                 ],
               ),
             ),

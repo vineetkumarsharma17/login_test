@@ -43,6 +43,10 @@ class SignUpView extends GetView<MainController> {
                     controller: controller.emailCtrl,
                     fieldName: "Email *",
                     hintText: "Email",
+                    onChanged: (p0) {
+                      controller.isLoginButtonActive.value =
+                          controller.validateEmailAndPassword();
+                    },
                   ),
                   const SizedBox(
                     height: 20,
@@ -51,6 +55,10 @@ class SignUpView extends GetView<MainController> {
                     controller: controller.passwordCtrl,
                     fieldName: "Password *",
                     hintText: "Password",
+                    onChanged: (p0) {
+                      controller.isLoginButtonActive.value =
+                          controller.validateEmailAndPassword();
+                    },
                   ),
                   const SizedBox(
                     height: 20,

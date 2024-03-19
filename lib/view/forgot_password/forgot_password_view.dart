@@ -44,6 +44,10 @@ class ForgotPasswordView extends GetView<MainController> {
                     controller: controller.emailCtrl,
                     fieldName: "Email *",
                     hintText: "Email",
+                    onChanged: (p0) {
+                      controller.isLoginButtonActive.value =
+                          controller.validateEmail();
+                    },
                   ),
                   const SizedBox(
                     height: 20,
@@ -54,7 +58,15 @@ class ForgotPasswordView extends GetView<MainController> {
                 ],
               ),
             ),
-            AppButton(text: "Submit", onPressed: () => mainController.logIn()),
+            Obx(
+              () => AppButton(
+                text: "Submit",
+                onPressed: () => mainController.forgotPassword(),
+                backgroundColor: controller.isLoginButtonActive.value
+                    ? null
+                    : AppColors.grey,
+              ),
+            ),
             const SizedBox(
               height: 30,
             ),

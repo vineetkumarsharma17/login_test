@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:login_test/helper/helper.dart';
 import 'package:login_test/view/home/home_view.dart';
 import 'package:login_test/view/login/login_view.dart';
@@ -59,6 +60,7 @@ class MainController extends GetxController {
       await auth.signInWithEmailAndPassword(
           email: emailCtrl.text.trim(), password: passwordCtrl.text.trim());
       dismissLoadingWidget();
+      Helpers.toast("Success.");
       // .then((value) => value)
       // .catchError((error, stackTrace) => );
     } on FirebaseAuthException catch (e) {
@@ -105,6 +107,7 @@ class MainController extends GetxController {
       await auth.createUserWithEmailAndPassword(
           email: emailCtrl.text.trim(), password: passwordCtrl.text.trim());
       dismissLoadingWidget();
+      Helpers.toast("Success.");
       // .then((value) => value)
       // .catchError((error, stackTrace) => );
     } on FirebaseAuthException catch (e) {
@@ -124,6 +127,30 @@ class MainController extends GetxController {
     }
   }
 
+  void signInWithGoogle() async {
+    try {
+      final GoogleSignInAccount? googleSignInAccount =
+          await GoogleSignIn().signIn();
+
+      final GoogleSignInAuthentication googleSignInAuthentication =
+          await googleSignInAccount!.authentication;
+      final OAuthCredential credential = GoogleAuthProvider.credential(
+        accessToken: googleSignInAuthentication.accessToken,
+        idToken: googleSignInAuthentication.idToken,
+      );
+      await auth.signInWithCredential(credential);
+    } on FirebaseAuthException catch (e) {
+      dismissLoadingWidget();
+      log("signup in firebase error:$e");
+      switch (e.code) {
+        default:
+          Helpers.toast(e.message ?? "");
+      }
+    } catch (e) {
+      log("google sign in error $e");
+    }
+  }
+
   void forgotPassword() async {
     // hide keyboard
     FocusManager.instance.primaryFocus?.unfocus();
@@ -137,9 +164,12 @@ class MainController extends GetxController {
     }
     showLoading();
     try {
-      await auth.createUserWithEmailAndPassword(
-          email: emailCtrl.text.trim(), password: passwordCtrl.text.trim());
+      await auth.sendPasswordResetEmail(email: emailCtrl.text.trim());
       dismissLoadingWidget();
+      emailCtrl.clear();
+      Get.back();
+      Helpers.toast("Email sent successfully.");
+
       // .then((value) => value)
       // .catchError((error, stackTrace) => );
     } on FirebaseAuthException catch (e) {
